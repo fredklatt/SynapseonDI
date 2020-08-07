@@ -1,0 +1,20 @@
+# Use an official Python 3.6 image as a parent image 
+FROM debian:9.2
+FROM python:3.6.4-slim-stretch
+RUN apt-get update
+RUN apt-get install -y python-pip
+RUN apt-get install -y python-dev
+RUN apt-get install -y unixodbc unixodbc-dev
+RUN pip install pyodbc
+RUN apt-get install curl -y
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get install apt-transport-https ca-certificates -y
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install msodbcsql17
+RUN pip --no-cache install tornado==5.0.2
+
+RUN groupadd -g 1234 vflow && useradd -g 1234 -u 1234 -m vflow
+USER 1234:1234
+WORKDIR /home/vflow 
+ENV HOME=/home/vflow

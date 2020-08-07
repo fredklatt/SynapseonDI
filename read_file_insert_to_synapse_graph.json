@@ -1,0 +1,137 @@
+{
+	"properties": {},
+	"description": "Demo Insert to Azure Synapse Table",
+	"processes": {
+		"readfile1": {
+			"component": "com.sap.file.read",
+			"metadata": {
+				"label": "Read File",
+				"x": 17,
+				"y": 72,
+				"height": 80,
+				"width": 120,
+				"config": {
+					"mode": "Once",
+					"connection": {
+						"configurationType": "Connection Management",
+						"connectionID": "AZURE_ADLV2_GCOE"
+					},
+					"path": "/dimCustomerExtract.csv",
+					"isBatch": false
+				}
+			}
+		},
+		"terminal1": {
+			"component": "com.sap.util.terminal",
+			"metadata": {
+				"label": "Terminal",
+				"x": 501.99999713897705,
+				"y": 12,
+				"height": 80,
+				"width": 120,
+				"ui": "dynpath",
+				"config": {}
+			}
+		},
+		"terminal2": {
+			"component": "com.sap.util.terminal",
+			"metadata": {
+				"label": "Terminal",
+				"x": 501.99999713897705,
+				"y": 132,
+				"height": 80,
+				"width": 120,
+				"ui": "dynpath",
+				"config": {}
+			}
+		},
+		"azuresynapseinserter1": {
+			"component": "Azure MSSQL DW Inserter",
+			"metadata": {
+				"label": "Azure Synapse Inserter",
+				"x": 316.99999809265137,
+				"y": 72,
+				"height": 80,
+				"width": 120,
+				"extensible": true,
+				"config": {
+					"server": "synapse-gcoe.database.windows.net",
+					"userid": "synapseadmin",
+					"password": "Welcome01",
+					"database": "synapse-gcoe",
+					"schema": "dbo",
+					"table": "DimCustomer_test",
+					"script": "import pyodbc\nimport os\nimport pwd\nimport io\nimport csv\n\n\n# Global Vars\nsynserver   = api.config.server\nsynport     = api.config.port\nsynuserid   = api.config.userid\nsynpassword = api.config.password\nsyndatabase = api.config.database\nsynschema   = api.config.schema \nsyntable    = api.config.table\n\ncon = None\nisValid = False\n\ndef debug():\n    api.logger.debug(\"synserver:\" + synserver)\n    api.logger.debug(\"synport:\" + synport)\n    api.logger.debug(\"synuserid:\" + synuserid)\n    api.logger.debug(\"synpassword:\" + synpassword)\n    api.logger.debug(\"syndatabase:\" + syndatabase)\n    api.logger.debug(\"synschema:\" + synschema) \n    api.logger.debug(\"syntable:\" + syntable)\n    \ndef validateParameters():\n    message = \"\"\n    if len(synserver.strip()) == 0: \n        message = \"Server cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message))\n\n    if len(synport.strip()) == 0: \n        message = \"Port cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message))\n\n    if len(synuserid.strip()) == 0: \n        message = \"Userid cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message)) \n    \n    if len(synpassword.strip()) == 0: \n        message = \"Password cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message)) \n        \n    if len(syndatabase.strip()) == 0: \n        message = \"Database cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message)) \n\n    if len(synschema.strip()) == 0: \n        message = \"Schema cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message)) \n    \n    if len(syntable.strip()) == 0: \n        message = \"Table cannot be empty\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message)) \n\n    return True\n\n#print values for debugging purposes\ndebug()    \n    \n#Connects to the database\ndef connect(server, port, database, uid, pwd):\n    return pyodbc.connect(driver='{ODBC Driver 17 for SQL Server}', server=server, port=port, database=database, uid=uid, pwd=pwd)\n    \n#first validate parameters\nisValid = validateParameters()\n\nif isValid:\n    #con is a global variable, connect to the database\n    con = connect(synserver, synport, syndatabase, synuserid, synpassword)\n    con.autocommit = True\n    if con is None:\n        message = \"Could not connect to Azure Synapse\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message))\n    else:\n        message = \"Connected to Azure Synapse\"\n        api.logger.info(message)\n\n#disconnects from the database\ndef disconnect ():\n    if con is not None:\n        try:\n            con.close()\n        except Exception as e:\n            api.logger.warn (\"Could not disconnect from database: \" + str(e))\n\n#add this handler to disconnect properly from the database\napi.add_shutdown_handler(disconnect)\n\n#Insert data to Snowflake,  inrows is a csv.reader iterator\ndef insertRows(inrows):\n    synobject = \"[\" + synschema + \"].[\" + syntable + \"]\"\n    cs = con.cursor()\n    api.logger.info('Inside insertRows')\n    try:\n        line_count = 0\n        for row in inrows:\n            api.logger.info(\"current row\")\n            api.logger.info(row)\n            insertstmt = None\n            \n            if line_count == 0:\n                strio = io.StringIO()\n                w1 = csv.writer(strio,quoting=csv.QUOTE_ALL, escapechar='\\\\', quotechar='\"', doublequote=True, lineterminator='')\n                w1.writerow(row)\n                outstr = strio.getvalue()\n                columns = outstr\n                api.logger.debug(\"columns list\")\n                api.logger.debug(columns)\n                sqlbase = \"INSERT INTO {0} ({1}) VALUES \".format(synobject, columns)\n                line_count += 1\n            else: \n                strio = io.StringIO()\n                w = csv.writer(strio,quoting=csv.QUOTE_ALL, escapechar='\\\\', quotechar=\"'\", doublequote=True, lineterminator='')\n                # reference for Synapse https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/query-single-csv-file\n                w.writerow(row)\n                outstr = strio.getvalue()\n                insertstmt = sqlbase + \"({0})\".format(outstr)\n                api.logger.debug('sql before execute')\n                api.logger.debug(insertstmt)\n                cs.execute(insertstmt)\n                line_count += 1\n    except Exception as e:\n        errormessage = str(e)\n        api.logger.error(errormessage)\n        api.send(\"outError\", errormessage)\n        rowsloaded = line_count - 1 # remove the counter for the header record\n        message = \"Inserted {0} rows successfully\".format(rowsloaded)\n        api.send(\"outMessage\", message)\n        api.propagate_exception(Exception(errormessage))\n    finally:\n        rowsloaded = line_count - 1 # remove the counter for the header record\n        message = \"Inserted {0} rows successfully\".format(rowsloaded)\n        api.send(\"outMessage\", message)\n        api.logger.info(\"closing Synapse connection\")\n        api.logger.debug('TOTAL Rows: {0}'.format(rowsloaded))\n        cs.close()\n    return True\n\ndef on_input(dataMsg):\n    outMessage = \"\"\n    f = io.StringIO(dataMsg.body.decode(\"utf-8\"))\n    data = csv.reader(f, quoting=csv.QUOTE_ALL, escapechar='\\\\', quotechar='\"', doublequote=True)\n    api.logger.debug(data)\n    if con is not None:\n        if data != \"\":\n            if insertRows(data):\n                outMessage = \"Insert completed\"\n                api.send(\"outMessage\", outMessage)\n            else:\n                outMessage = \"Insert failed\"\n                # send the result downstream\n                api.logger.info(outMessage)\n                api.send(\"outError\", outMessage)\n        else:\n            api.logger.info(\"No data set to insert\")\n    else:\n        message = \"No connection to database\"\n        api.logger.error(message)\n        api.propagate_exception(Exception(message))\n\n#Add this handler to the input\napi.set_port_callback(\"inData\", on_input)\n\n\n"
+				}
+			}
+		},
+		"fromfile1": {
+			"component": "com.sap.file.fromFile",
+			"metadata": {
+				"label": "From File",
+				"x": 201.99999904632568,
+				"y": 87,
+				"height": 50,
+				"width": 50,
+				"config": {}
+			}
+		}
+	},
+	"groups": [],
+	"connections": [
+		{
+			"metadata": {
+				"points": "440.99999809265137,103 468.9999976158142,103 468.9999976158142,52 496.99999713897705,52"
+			},
+			"src": {
+				"port": "outMessage",
+				"process": "azuresynapseinserter1"
+			},
+			"tgt": {
+				"port": "in1",
+				"process": "terminal1"
+			}
+		},
+		{
+			"metadata": {
+				"points": "440.99999809265137,121 468.9999976158142,121 468.9999976158142,172 496.99999713897705,172"
+			},
+			"src": {
+				"port": "outError",
+				"process": "azuresynapseinserter1"
+			},
+			"tgt": {
+				"port": "in1",
+				"process": "terminal2"
+			}
+		},
+		{
+			"metadata": {
+				"points": "141,103 168.99999952316284,103 168.99999952316284,112 196.99999904632568,112"
+			},
+			"src": {
+				"port": "file",
+				"process": "readfile1"
+			},
+			"tgt": {
+				"port": "file",
+				"process": "fromfile1"
+			}
+		},
+		{
+			"metadata": {
+				"points": "255.99999904632568,121 283.9999985694885,121 283.9999985694885,112 311.99999809265137,112"
+			},
+			"src": {
+				"port": "message",
+				"process": "fromfile1"
+			},
+			"tgt": {
+				"port": "inData",
+				"process": "azuresynapseinserter1"
+			}
+		}
+	],
+	"inports": {},
+	"outports": {}
+}

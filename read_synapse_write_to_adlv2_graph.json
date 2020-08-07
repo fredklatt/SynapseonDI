@@ -1,0 +1,373 @@
+{
+	"properties": {},
+	"description": "Azure_Synapse_to_ADLv2",
+	"processes": {
+		"azuresqldbtableconsumer1": {
+			"component": "com.sap.dh.ds.azuresqldb.table.consumer",
+			"metadata": {
+				"label": "Azure SQL DB Table Consumer",
+				"x": 17,
+				"y": 12,
+				"height": 80,
+				"width": 120,
+				"extensible": false,
+				"config": {
+					"azuresqldbConnection": {
+						"configurationType": "Configuration Manager",
+						"connectionID": "AZURE_SYNAPSE_GCOE"
+					},
+					"adapted_dataset": {
+						"remoteObjectReference": {
+							"connection": {
+								"id": "AZURE_SYNAPSE_GCOE",
+								"type": "AZURE_SQL_DB"
+							},
+							"name": "DimCustomer",
+							"remoteObjectType": "TABLE",
+							"qualifiedName": "/dbo/DimCustomer",
+							"nativeQualifiedName": "dbo.DimCustomer",
+							"owner": "dbo"
+						},
+						"dataAccessConfiguration": {
+							"Row Count": "0",
+							"TableType": "TABLE",
+							"Table_Subtype": "TABLE",
+							"MetadataResponseXML": "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<MetadataReply xmlns=\"http://www.sap.com/DataServices/DataServicesXSD\">\n<MetadataObjects><Table Name=\"DimCustomer\"  Owner=\"dbo\" ><Attributes><Attribute Name=\"Table_Subtype\"  Value=\"TABLE\" /></Attributes><Column Name=\"CustomerKey\"  Nullable=\"false\" DataType=\"int\" NativeType=\"int\" ActaEnum=\"ACTA_INTEGER\" ></Column><Column Name=\"GeographyKey\"  Nullable=\"true\" DataType=\"int\" NativeType=\"int\" ActaEnum=\"ACTA_INTEGER\" ></Column><Column Name=\"CustomerAlternateKey\"  Nullable=\"false\" DataType=\"varchar\" Size=\"15\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"Title\"  Nullable=\"true\" DataType=\"varchar\" Size=\"8\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"FirstName\"  Nullable=\"true\" DataType=\"varchar\" Size=\"50\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"MiddleName\"  Nullable=\"true\" DataType=\"varchar\" Size=\"50\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"LastName\"  Nullable=\"true\" DataType=\"varchar\" Size=\"50\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"NameStyle\"  Nullable=\"true\" DataType=\"int\" NativeType=\"bit\" ActaEnum=\"ACTA_INTEGER\" ></Column><Column Name=\"BirthDate\"  Nullable=\"true\" DataType=\"date\" NativeType=\"date\" ActaEnum=\"ACTA_DATE\" ></Column><Column Name=\"MaritalStatus\"  Nullable=\"true\" DataType=\"varchar\" Size=\"1\"  NativeType=\"nchar\" ActaEnum=\"ACTA_NFIXCSTR\" ></Column><Column Name=\"Suffix\"  Nullable=\"true\" DataType=\"varchar\" Size=\"10\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"Gender\"  Nullable=\"true\" DataType=\"varchar\" Size=\"1\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"EmailAddress\"  Nullable=\"true\" DataType=\"varchar\" Size=\"50\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"YearlyIncome\"  Nullable=\"true\" DataType=\"decimal\" Precision=\"19\"  Scale=\"4\"  NativeType=\"money\" ActaEnum=\"ACTA_DECIMAL\" ></Column><Column Name=\"TotalChildren\"  Nullable=\"true\" DataType=\"int\" NativeType=\"tinyint\" ActaEnum=\"ACTA_INTEGER\" ></Column><Column Name=\"NumberChildrenAtHome\"  Nullable=\"true\" DataType=\"int\" NativeType=\"tinyint\" ActaEnum=\"ACTA_INTEGER\" ></Column><Column Name=\"EnglishEducation\"  Nullable=\"true\" DataType=\"varchar\" Size=\"40\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"SpanishEducation\"  Nullable=\"true\" DataType=\"varchar\" Size=\"40\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"FrenchEducation\"  Nullable=\"true\" DataType=\"varchar\" Size=\"40\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"EnglishOccupation\"  Nullable=\"true\" DataType=\"varchar\" Size=\"100\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"SpanishOccupation\"  Nullable=\"true\" DataType=\"varchar\" Size=\"100\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"FrenchOccupation\"  Nullable=\"true\" DataType=\"varchar\" Size=\"100\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"HouseOwnerFlag\"  Nullable=\"true\" DataType=\"varchar\" Size=\"1\"  NativeType=\"nchar\" ActaEnum=\"ACTA_NFIXCSTR\" ></Column><Column Name=\"NumberCarsOwned\"  Nullable=\"true\" DataType=\"int\" NativeType=\"tinyint\" ActaEnum=\"ACTA_INTEGER\" ></Column><Column Name=\"AddressLine1\"  Nullable=\"true\" DataType=\"varchar\" Size=\"120\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"AddressLine2\"  Nullable=\"true\" DataType=\"varchar\" Size=\"120\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"Phone\"  Nullable=\"true\" DataType=\"varchar\" Size=\"20\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column><Column Name=\"DateFirstPurchase\"  Nullable=\"true\" DataType=\"date\" NativeType=\"date\" ActaEnum=\"ACTA_DATE\" ></Column><Column Name=\"CommuteDistance\"  Nullable=\"true\" DataType=\"varchar\" Size=\"15\"  NativeType=\"nvarchar\" ActaEnum=\"ACTA_NVARCSTR\" ></Column></Table></MetadataObjects><Status><StatusCode>SUCCESS</StatusCode></Status></MetadataReply>"
+						},
+						"schema": {
+							"genericType": "TABLE",
+							"tableBasedRepresentation": {
+								"attributes": [
+									{
+										"name": "CustomerKey",
+										"templateType": "int32",
+										"datatype": "INTEGER",
+										"length": 4,
+										"nativeDatatype": "int"
+									},
+									{
+										"name": "GeographyKey",
+										"templateType": "int32",
+										"datatype": "INTEGER",
+										"length": 4,
+										"nativeDatatype": "int"
+									},
+									{
+										"name": "CustomerAlternateKey",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 15,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "Title",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 8,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "FirstName",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 50,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "MiddleName",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 50,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "LastName",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 50,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "NameStyle",
+										"templateType": "int32",
+										"datatype": "INTEGER",
+										"length": 4,
+										"nativeDatatype": "bit"
+									},
+									{
+										"name": "BirthDate",
+										"templateType": "date",
+										"datatype": "DATE",
+										"nativeDatatype": "date"
+									},
+									{
+										"name": "MaritalStatus",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 1,
+										"nativeDatatype": "nchar"
+									},
+									{
+										"name": "Suffix",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 10,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "Gender",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 1,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "EmailAddress",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 50,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "YearlyIncome",
+										"templateType": "decimal",
+										"datatype": "DECIMAL",
+										"precision": 19,
+										"scale": 4,
+										"nativeDatatype": "money"
+									},
+									{
+										"name": "TotalChildren",
+										"templateType": "int32",
+										"datatype": "INTEGER",
+										"length": 4,
+										"nativeDatatype": "tinyint"
+									},
+									{
+										"name": "NumberChildrenAtHome",
+										"templateType": "int32",
+										"datatype": "INTEGER",
+										"length": 4,
+										"nativeDatatype": "tinyint"
+									},
+									{
+										"name": "EnglishEducation",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 40,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "SpanishEducation",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 40,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "FrenchEducation",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 40,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "EnglishOccupation",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 100,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "SpanishOccupation",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 100,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "FrenchOccupation",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 100,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "HouseOwnerFlag",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 1,
+										"nativeDatatype": "nchar"
+									},
+									{
+										"name": "NumberCarsOwned",
+										"templateType": "int32",
+										"datatype": "INTEGER",
+										"length": 4,
+										"nativeDatatype": "tinyint"
+									},
+									{
+										"name": "AddressLine1",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 120,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "AddressLine2",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 120,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "Phone",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 20,
+										"nativeDatatype": "nvarchar"
+									},
+									{
+										"name": "DateFirstPurchase",
+										"templateType": "date",
+										"datatype": "DATE",
+										"nativeDatatype": "date"
+									},
+									{
+										"name": "CommuteDistance",
+										"templateType": "string",
+										"datatype": "STRING",
+										"length": 15,
+										"nativeDatatype": "nvarchar"
+									}
+								]
+							}
+						},
+						"capabilities": {
+							"isProfileable": true
+						},
+						"capabilityProperties": [
+							{
+								"name": "isProfileable",
+								"value": "true"
+							}
+						]
+					}
+				}
+			}
+		},
+		"flowagentfileproducer1": {
+			"component": "com.sap.dh.ds.storage.producer",
+			"metadata": {
+				"label": "Flowagent File Producer",
+				"x": 201.99999904632568,
+				"y": 12,
+				"height": 80,
+				"width": 120,
+				"extensible": false,
+				"config": {
+					"service": "adl_v2",
+					"adl_v2Connection": {
+						"connectionID": "AZURE_ADLV2_GCOE"
+					},
+					"adl_v2TargetObjectName": "dimCustomerExtract.csv",
+					"additionalProperties_csv": {
+						"columnDelimiter": ",",
+						"csvHeaderIncluded": true
+					}
+				}
+			}
+		},
+		"terminal1": {
+			"component": "com.sap.util.terminal",
+			"metadata": {
+				"label": "Terminal",
+				"x": 485.99999809265137,
+				"y": 12,
+				"height": 80,
+				"width": 120,
+				"ui": "dynpath",
+				"config": {}
+			}
+		},
+		"tostringconverter1": {
+			"component": "com.sap.util.toStringConverter",
+			"metadata": {
+				"label": "ToString Converter",
+				"x": 386.99999809265137,
+				"y": 27,
+				"height": 50,
+				"width": 50,
+				"config": {}
+			}
+		},
+		"workflowterminator1": {
+			"component": "com.sap.dh.terminator",
+			"metadata": {
+				"label": "Workflow Terminator",
+				"x": 654.9999980926514,
+				"y": 12,
+				"height": 80,
+				"width": 120,
+				"config": {}
+			}
+		}
+	},
+	"groups": [],
+	"connections": [
+		{
+			"metadata": {
+				"points": "141,43 168.99999952316284,43 168.99999952316284,52 196.99999904632568,52"
+			},
+			"src": {
+				"port": "outConfig",
+				"process": "azuresqldbtableconsumer1"
+			},
+			"tgt": {
+				"port": "inConfig",
+				"process": "flowagentfileproducer1"
+			}
+		},
+		{
+			"metadata": {
+				"points": "325.9999990463257,52 353.9999985694885,52 353.9999985694885,43 381.99999809265137,43"
+			},
+			"src": {
+				"port": "outMessage",
+				"process": "flowagentfileproducer1"
+			},
+			"tgt": {
+				"port": "ininterface",
+				"process": "tostringconverter1"
+			}
+		},
+		{
+			"metadata": {
+				"points": "440.99999809265137,52 480.99999809265137,52"
+			},
+			"src": {
+				"port": "outstring",
+				"process": "tostringconverter1"
+			},
+			"tgt": {
+				"port": "in1",
+				"process": "terminal1"
+			}
+		},
+		{
+			"metadata": {
+				"points": "609.9999980926514,52 649.9999980926514,52"
+			},
+			"src": {
+				"port": "out1",
+				"process": "terminal1"
+			},
+			"tgt": {
+				"port": "stop",
+				"process": "workflowterminator1"
+			}
+		}
+	],
+	"inports": {},
+	"outports": {}
+}
